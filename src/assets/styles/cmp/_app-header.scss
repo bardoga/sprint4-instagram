@@ -1,0 +1,28 @@
+.app-header {
+    height: 59px;
+    position: fixed;
+    background-color: #FFFAFA;
+    width: 100%;
+    margin: 0;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 1px solid lightgray;
+}
+
+.app-header-nav {
+    text-align: right;
+}
+
+.app-header-logo {
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.add-post {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

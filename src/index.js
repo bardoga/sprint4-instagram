@@ -1,14 +1,26 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import ReactDOM from 'react-dom/client'
+import { RootCmp } from './root-cmp';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import './assets/styles/main.scss'
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom'
+// import { store } from './store/store';
+import configureStore from './configure-store';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// console.log('store from index ' , store)
+const store = configureStore()
+
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <Router>
+        <RootCmp />
+      </Router>
+    </Provider>
   </React.StrictMode>
 );
 
