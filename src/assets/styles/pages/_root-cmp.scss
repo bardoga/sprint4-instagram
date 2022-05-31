@@ -28,4 +28,14 @@ code {
 
 html {
     margin: 0;
+    background-color: #fafafa;
+}
+
+::-webkit-scrollbar {
+    background: #e8f2ff;
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0043e8;
 }

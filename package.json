@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "formik": "^2.2.9",
     "javascript-time-ago": "^2.5.4",
     "node-sass": "^7.0.1",
     "react": "^18.1.0",
@@ -21,6 +22,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.5",
+    "use-history": "^1.4.1",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.5.3",
     "workbox-broadcast-update": "^6.5.3",
@@ -33,7 +35,8 @@
     "workbox-range-requests": "^6.5.3",
     "workbox-routing": "^6.5.3",
     "workbox-strategies": "^6.5.3",
-    "workbox-streams": "^6.5.3"
+    "workbox-streams": "^6.5.3",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",
