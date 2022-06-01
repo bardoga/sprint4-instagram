@@ -1,12 +1,13 @@
+$ce3: 239,
+239,
+239;
 .story-wrapper {
     border: 1px solid lightgrey;
     max-width: 470px;
     margin-bottom: 12px;
+    background-color: #FFFFFF;
 }
 
-// .story-wrapper-inner {
-//     z-index: 5;
-// }
 .story-wrapper-inner p {
     text-align: left;
     padding-left: 12px;
@@ -17,7 +18,6 @@
     width: 100%;
     object-fit: contain;
     border-top: 1px solid lightgrey;
-    // border-bottom: 1px solid lightgrey;
     max-height: 587.5px;
     min-width: 470px;
 }
@@ -25,10 +25,12 @@
 .post-username {
     display: flex;
     align-items: center;
+    width: 100%;
+    min-height: 58px;
 }
 
 .story-avatar {
-    margin: 5px;
+    margin: 0;
 }
 
 .bold-me {
@@ -51,44 +53,41 @@
 }
 
 .post-username:first-child {
-    // padding-bottom: 7px;
     font-weight: 500;
+    font-size: 0.8em
 }
 
 textarea {
-    box-sizing: content-box;
+    margin-top: auto;
+    line-height: 18px;
+    align-items: center;
     letter-spacing: 0.05px;
     text-indent: 0px;
     text-shadow: none;
-    margin: 0em;
+    // margin: 0em;
     overflow-wrap: break-word;
     white-space: pre-wrap;
     text-align: start;
-    line-height: 18px;
     border: none;
     resize: none;
     text-align: start;
     outline: 0;
     max-height: 80px;
     padding-left: 20px;
-    // padding-top: 25px;
     display: flex;
     flex-grow: 1;
     padding-bottom: 20px;
     font-size: 1.2em;
     overflow: hidden;
-    border-radius: 10px
+    border-radius: 10px;
 }
 
 .preview-comment-section {
-    // border-top: 1px solid lightgrey;
-    // margin-top: -20px;
     display: flex;
-    // flex-grow: 1;
-    // left: 0;
-    // overflow-y: scroll;
-    // // position: absolute;
-    // padding: 16px;
+    border-top: 1px solid #efefef;
+    border-top: 1px solid rgba(var(--ce3, 239, 239, 239), 1);
+    align-items: center;
+    height: 49px;
 }
 
 .post-comment {
@@ -103,12 +102,24 @@ textarea {
     font-size: 0.9em;
 }
 
+.more-section-parent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .more-section {
     display: flex;
     flex-direction: row;
     padding-left: 15px;
     padding-top: 7px;
     gap: 10px;
+}
+
+.more-section-save {
+    padding-right: 15px;
+    padding-top: 7px;
+    cursor: pointer;
 }
 
 .underlineme:hover {
@@ -122,4 +133,10 @@ textarea {
 
 .more-comments-section {
     text-decoration: none;
+}
+
+.asasa {
+    p {
+        font-size: 0.9em;
+    }
 }

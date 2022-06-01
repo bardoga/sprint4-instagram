@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useSelector,useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { Link, NavLink } from 'react-router-dom'
 import routes from '../routes'
 import { NewStoryModal } from './new-story-modal'
@@ -20,11 +20,14 @@ export const AppHeader = () => {
         console.log('adding post..')
         setShowModal(prev => !prev)
     }
-
+    const checkLoggedUser = () => {
+        if (user) return user.imgUrl
+        else return
+    }
 
     return (
         <header className="app-header">
-            <Link to={'/gram'} style={{textDecoration:'none'}}>
+            <Link to={'/gram'} style={{ textDecoration: 'none' }}>
                 <div className="app-header-logo">
                     MyGram
                 </div>
@@ -40,7 +43,7 @@ export const AppHeader = () => {
                     <img onClick={onAddPost} className="navbar-icons" src={more} width={24} height={24} alt="" />
                     <img className="navbar-icons" src={direction} width={24} height={24} alt="" />
                     <img className="navbar-icons" src={heart} width={24} height={24} alt="" />
-                    <Avatar style={{'maxWidth':'26px','maxHeight':'26px','marginLeft':'3px'}} />
+                    <Avatar style={{ 'maxWidth': '27px', 'maxHeight': '27px', 'marginLeft': '10px' }} src={checkLoggedUser()} />
                 </nav>
             </div>
             <div>

@@ -1,72 +1,65 @@
 .details-background {
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    // background: rgba(0, 0, 0, 0.8);
+    background-color: #575757;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     top: 0;
-    left: 0%;
+    left: 0;
     margin: 0;
-    margin-bottom: 300px;
     z-index: 10;
 }
 
 // 608 450 
 .details-wrapper {
     width: 70vw;
-    // max-height: 100%;
-    // height: 85vh;
+    max-height: 80%;
+    height: 80%;
     min-width: 608px;
+    min-height: 450px;
     box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
     background: #fff;
     color: #000;
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    z-index: 5;
-    border-radius: 10px;
+    border-radius: 0 4px 4px 0;
 }
 
-// .details-wrapper.visible {
-//     transition:
-// transform: scale(1);
-// transform: 0.3s cubic-bezier(0.465, 0.183, 0.153, 0.946);
-// opacity: 0.3s cubic-bezier(0.465, 0.183, 0.153, 0.946);
-// }
 .details-inner {
-    // width: 100%;
-    // height: 85%;
-    // border-radius: 10px 0 0 10px;
-    // background-color: #000;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px 0 0 10px;
 }
 
 .details-content {
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     line-height: 1.8;
     color: #141414;
     p {
-        // border-bottom: 1px solid lightgray;
         text-align: left;
         margin: 12px;
     }
 }
 
+.left-side-img {
+    width: 100%;
+    height: 100%;
+}
+
 .left-side-img img {
+    min-height: 100%;
     max-width: 100%;
     max-height: 100%;
-    // height: auto;
-    max-height: auto;
     min-width: 100%;
     resize: both;
     bottom: 0;
     object-fit: contain;
     margin-left: 0;
-    // border-top: 1px solid lightgrey;
     background-color: #000;
-    aspect-ratio: 1/1;
 }
 
 .details-close-button {
@@ -101,11 +94,15 @@
 }
 
 .chatbox {
+    min-height: 100%;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
     border-radius: 10px;
     max-width: 500px;
     min-width: 400px;
-    // max-height: none;
 }
 
 .story-avatar-details {
@@ -114,6 +111,7 @@
 
 .inner-chat-box {
     max-height: 50vh;
+    height: 100%;
     line-height: 1rem;
     padding: 16px;
     overflow-y: scroll;

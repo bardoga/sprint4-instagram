@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react"
 import { storageService } from "./async-storage.service"
+import { utilService } from "./utils.service"
 
 const STORAGE_KEY = 'user'
 const STORAGE_KEY_LOGGEDIN = 'loggedinUser'
@@ -49,7 +50,7 @@ async function update(user) {
 async function login(userCred) {
     console.log(userCred)
     return storageService.query(STORAGE_KEY).then(users => {
-        const user = users.find(user => user.email === userCred.email &&
+        const user = users.find(user => user.email === userCred.emailuser || user.username === userCred.emailuser &&
             user.password === userCred.password)
         if (user) sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(user))
         return user
@@ -59,7 +60,7 @@ async function login(userCred) {
 async function signup(userCred) {
     console.log('userCred:', userCred)
     const user = await storageService.post('user', userCred)
-    return saveLocalUser(user)
+        // return saveLocalUser(user)
 }
 
 
@@ -77,6 +78,25 @@ function getLoggedinUser() {
     return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN) || 'null')
 }
 
-// userService.signup({ email: 'john@com', username: 'john', password: 'ilovejohn123', fullname: 'Muki Ja' })
-// userService.login({ username: john, password: john })
-// userService.logout()
+const user = {
+        "_id": utilService.makeId(),
+        "username": "bobo",
+        "password": "ilovebobo123",
+        "fullname": "bobo_1",
+        "imgUrl": "https://thumbs.dreamstime.com/b/happy-smiling-geek-hipster-beard-man-cool-avatar-geek-man-avatar-104871313.jpg",
+        "createdAt": Date.now(),
+        "following": [{
+            "_id": "u106",
+            "fullname": "Dob",
+            "imgUrl": "http://some-img"
+        }],
+        "followers": [{
+            "_id": "u105",
+            "fullname": "Bob",
+            "imgUrl": "http://some-img"
+        }],
+        "savedStoryIds": ["s104", "s111", "s123"]
+    }
+    // userService.signup(user)
+    // userService.login(user)
+    // userService.logout()

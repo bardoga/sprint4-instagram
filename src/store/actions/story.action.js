@@ -38,6 +38,20 @@ export function loadStorys() {
     }
 }
 
+export function addStory(story) {
+    return (dispatch) => {
+
+        storyService.save(story)
+            .then(savedStory => {
+                console.log('Added Story', savedStory);
+                dispatch(getActionAddStory(savedStory))
+            })
+            .catch(err => {
+                console.log('Cannot add story', err)
+            })
+    }
+}
+
 // export function loadStorys() { // Action Creator
 //     return async(dispatch, getState) => {
 //         try {

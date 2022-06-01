@@ -24,7 +24,8 @@
     display: flex;
     justify-content: center;
     input {
-        background-color: #fafafa;
+        background-color: #EFEFEF;
+        outline: none;
         border-radius: 5px;
         border: none;
         height: 30px;
@@ -32,6 +33,7 @@
         margin-top: 10px;
         border: 1px solid #dbdbdb;
         text-align: center;
+        text-decoration: none;
     }
 }
 

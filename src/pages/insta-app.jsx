@@ -14,14 +14,20 @@ export const InstaApp = (props) => {
     const { user } = useSelector((storeState) => storeState.userModule)
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        document.body.scrollTop = 0;
+    },[])
+    useEffect(() => {
+        document.body.scrollTop = 0;
+    })
 
 
     useEffect(() => {
         dispatch(loadStorys())
     }, [])
 
-    console.log('your storys are:', storys)
-    console.log('logged in user is:', user)
+    // console.log('your storys are:', storys)
+    // console.log('logged in user is:', user)
     return (
         <section className="insta-app">
             <div className="storys-wrapper">

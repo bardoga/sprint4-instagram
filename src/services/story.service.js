@@ -1,16 +1,18 @@
 import { storageService } from './async-storage.service.js'
 import { utilService } from './utils.service.js'
-// import { getActionRemoveStory, getActionAddStory, getActionUpdateStory } from '../store/action/story.action'
+import { userService } from './user.service.js'
+import { getActionRemoveStory, getActionAddStory, getActionUpdateStory } from '../store/actions/story.action'
 
 const STORAGE_KEY = 'story'
 const storyChannel = new BroadcastChannel('storyChannel')
-
+const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
 
 export const storyService = {
     query,
     getById,
     remove,
     save,
+    createStory,
     subscribe,
     unsubscribe
 
@@ -27,6 +29,30 @@ function getById(storyId) {
         // return axios.get(`/api/story/${storyId}`)
 }
 
+export function createStory(txt, img, user) {
+
+    let story = {
+        "_id": utilService.makeId(),
+        "txt": txt,
+        "imgUrl": img.imgUrl, //Can be an array if decide to support multiple imgs
+        "createdAt": Date.now(),
+        "by": {
+            "_id": (user) ? user._id : 'guest_id',
+            "fullname": (user) ? user.fulname : 'guest',
+            "imgUrl": (user) ? user.imgUrl : guestUserPhoto
+        },
+        "loc": {
+            "lat": '',
+            "lng": '',
+            "name": ''
+        },
+        "comments": [],
+        "likedBy": [],
+        "tags": ['fun']
+
+    }
+    save(story)
+}
 
 async function remove(storyId) {
     // return new Promise((resolve, reject) => {
@@ -34,19 +60,19 @@ async function remove(storyId) {
     // })
     // return Promise.reject('Not now!');
     await storageService.remove(STORAGE_KEY, storyId)
-        // storyChannel.postMessage(getActionRemoveStory(storyId))
+    storyChannel.postMessage(getActionRemoveStory(storyId))
 }
 async function save(story) {
     var savedstory
     if (story._id) {
         savedstory = await storageService.put(STORAGE_KEY, story)
-            // storyChannel.postMessage(getActionUpdateStory(savedstory))
+        storyChannel.postMessage(getActionUpdateStory(savedstory))
 
     } else {
         // Later, owner is set by the backend
         // story.owner = userService.getLoggedinUser()
         savedstory = await storageService.post(STORAGE_KEY, story)
-            // storyChannel.postMessage(getActionAddStory(savedstory))
+        storyChannel.postMessage(getActionAddStory(savedstory))
     }
     return savedstory
 }
