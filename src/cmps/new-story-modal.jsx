@@ -11,6 +11,7 @@ import leftArrow from '../assets/svg/left-arrow.png'
 
 
 
+
 export const NewStoryModal = ({ showModal, setShowModal }) => {
     const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
 
@@ -125,9 +126,9 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
                                                 <div>
                                                     <h3>Drag photos and videos here</h3>
                                                 </div>
-                                                <div>
+                                                {/* <div>
                                                     <button className="modal-content-btn2">Select from computer</button>
-                                                </div>
+                                                </div> */}
                                                 <div>
                                                     <ImgUploader onUploaded={onUploaded} />
                                                 </div>

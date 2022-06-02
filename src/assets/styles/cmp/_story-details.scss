@@ -1,7 +1,6 @@
 .details-background {
-    width: 100vw;
-    height: 100vh;
-    // background: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
     background-color: #575757;
     position: absolute;
     display: flex;
@@ -121,11 +120,12 @@
 
 .chatbox-fixed-header {
     position: relative;
+    display: flex;
     height: 60px;
+    border-bottom: 1px solid lightgrey;
     p {
         display: flex;
         align-items: center;
-        border-bottom: 1px solid lightgrey;
     }
     // padding-bottom: 16px;
 }
@@ -140,6 +140,7 @@
         width: auto;
         overflow: hidden;
         margin-right: 5px;
+        font-size: 0.9em;
     }
     span {
         padding-right: 2px;
@@ -149,6 +150,12 @@
     justify-content: space-between;
     height: fit-content;
     width: auto;
+    margin-top: 5px;
+}
+
+.love-logo {
+    margin-right: 20px;
+    margin-bottom: 15px;
 }
 
 .align-right {
@@ -159,8 +166,13 @@
 .details-comment-section {
     display: flex;
     border-top: 1px solid lightgrey;
+    height: 53px
 }
 
 .details-input-comments {
     border-top: 1px solid lightgrey;
+}
+
+.inner-individual-comments {
+    display: flex;
 }
