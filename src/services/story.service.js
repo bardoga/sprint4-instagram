@@ -1,80 +1,99 @@
-import { storageService } from './async-storage.service.js'
+// import { storageService } from './async-storage.service.js'
+import { httpService } from './http.service.js'
 import { utilService } from './utils.service.js'
-import { userService } from './user.service.js'
+// import { userService } from './user.service.js'
 import { getActionRemoveStory, getActionAddStory, getActionUpdateStory } from '../store/actions/story.action'
 
-const STORAGE_KEY = 'story'
+// const STORAGE_KEY = 'story'
 const storyChannel = new BroadcastChannel('storyChannel')
 const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
+const END_POINT = 'story/'
 
 export const storyService = {
     query,
     getById,
     remove,
     save,
-    createStory,
+    add,
+    // createStory,
     subscribe,
     unsubscribe
-
 }
 
 window.cs = storyService
 
 function query() {
-    return storageService.query(STORAGE_KEY)
+    // return storageService.query(STORAGE_KEY)
+    return httpService.get(END_POINT)
 }
 
 function getById(storyId) {
-    return storageService.get(STORAGE_KEY, storyId)
+    // return storageService.get(STORAGE_KEY, storyId)
+    const story = httpService.get(END_POINT + storyId)
+    return story
         // return axios.get(`/api/story/${storyId}`)
 }
 
-export function createStory(txt, img, user) {
+// export function createStory(txt, img, user) {
 
-    let story = {
-        "_id": utilService.makeId(),
-        "txt": txt,
-        "imgUrl": img.imgUrl, //Can be an array if decide to support multiple imgs
-        "createdAt": Date.now(),
-        "by": {
-            "_id": (user) ? user._id : 'guest_id',
-            "fullname": (user) ? user.fulname : 'guest',
-            "imgUrl": (user) ? user.imgUrl : guestUserPhoto
-        },
-        "loc": {
-            "lat": '',
-            "lng": '',
-            "name": ''
-        },
-        "comments": [],
-        "likedBy": [],
-        "tags": ['fun']
+//     let story = {
+//         "_id": utilService.makeId(),
+//         "txt": txt,
+//         "imgUrl": img.imgUrl, //Can be an array if decide to support multiple imgs
+//         "createdAt": Date.now(),
+//         "by": {
+//             "_id": (user) ? user._id : 'guest_id',
+//             "fullname": (user) ? user.fulname : 'guest',
+//             "imgUrl": (user) ? user.imgUrl : guestUserPhoto
+//         },
+//         "loc": {
+//             "lat": '',
+//             "lng": '',
+//             "name": ''
+//         },
+//         "comments": [],
+//         "likedBy": [],
+//         "tags": ['fun']
 
-    }
-    save(story)
-}
+//     }
+//     save(story)
+// }
 
 async function remove(storyId) {
     // return new Promise((resolve, reject) => {
     //     setTimeout(reject, 2000)
     // })
     // return Promise.reject('Not now!');
-    await storageService.remove(STORAGE_KEY, storyId)
+    // await storageService.remove(STORAGE_KEY, storyId)
+    // storyChannel.postMessage(getActionRemoveStory(storyId))
+    const { data } = await httpService.delete(END_POINT + storyId)
     storyChannel.postMessage(getActionRemoveStory(storyId))
+    return data
 }
+
+async function add(story) {
+    const addedStory = await httpService.post('story', story)
+    storyChannel.postMessage(getActionAddStory(addedStory))
+    return addedStory
+}
+
+
 async function save(story) {
-    var savedstory
     if (story._id) {
-        savedstory = await storageService.put(STORAGE_KEY, story)
-        storyChannel.postMessage(getActionUpdateStory(savedstory))
+        // const savedstory = await storageService.put(STORAGE_KEY, story)
+        const savedStory = await httpService.put(END_POINT + story._id, story)
+        storyChannel.postMessage(getActionUpdateStory(savedStory))
+        return savedStory
 
     } else {
         // Later, owner is set by the backend
         // story.owner = userService.getLoggedinUser()
-        savedstory = await storageService.post(STORAGE_KEY, story)
-        storyChannel.postMessage(getActionAddStory(savedstory))
+        // savedstory = await storageService.post(STORAGE_KEY, story)
+        // storyChannel.postMessage(getActionAddStory(savedstory))
+        const savedStory = await httpService.post(END_POINT, story)
+        storyChannel.postMessage(getActionAddStory(savedStory))
+        return savedStory
     }
-    return savedstory
 }
 
 function subscribe(listener) {

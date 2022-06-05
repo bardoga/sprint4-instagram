@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { AppHeader } from './cmps/app-header';
 import { SignUp } from './cmps/signup';
+// import { SignUp } from './cmps/signup2';
 
 import { StoryDetails } from './cmps/story-details.jsx'
 import { LoginPage } from './pages/login-page';

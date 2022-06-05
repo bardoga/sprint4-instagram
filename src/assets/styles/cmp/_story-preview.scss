@@ -18,7 +18,7 @@ $ce3: 239,
     width: 100%;
     object-fit: contain;
     border-top: 1px solid lightgrey;
-    max-height: 587.5px;
+    // max-height: 587.5px;
     min-width: 470px;
 }
 
@@ -93,6 +93,7 @@ textarea {
 .post-comment {
     border: none;
     background-color: #fff;
+    font-weight: 520;
     height: 40px;
     cursor: pointer;
     margin-left: auto;
@@ -114,6 +115,15 @@ textarea {
     padding-left: 15px;
     padding-top: 7px;
     gap: 10px;
+}
+
+.more-section-hovereffect:hover {
+    // background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    // background-clip: text;
+    // border-radius: 20%;
+    // transform: scale(1.5);
+    // color: transparent;
+    opacity: .5
 }
 
 .more-section-save {

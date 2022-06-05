@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom'
 import { utilService } from '../services/utils.service';
 import { loadStorys, saveStory } from '../store/actions/story.action'
@@ -12,6 +12,7 @@ import { MdClose } from 'react-icons/md'
 import { FavoriteBorder, Textsms, LocationOnOutlined, PropaneSharp } from '@mui/icons-material'
 import { Avatar } from '@mui/material';
 import { useDispatch } from 'react-redux';
+import { StoryPreview } from './story-preview';
 
 
 export const StoryDetails = (props) => {
@@ -20,6 +21,7 @@ export const StoryDetails = (props) => {
 
     const [text, setText] = useState('')
     const [color, setColor] = useState('lightblue')
+    const { storys } = useSelector((storeState) => storeState.storyModule)
     const { user } = useSelector((storeState) => storeState.userModule)
     const dispatch = useDispatch()
 
@@ -27,23 +29,18 @@ export const StoryDetails = (props) => {
     const params = useParams()
     const navigate = useNavigate()
 
-    // const setShowModal = () => {
-    // params.push.history('/gram')
-    // console.log(params)
-    // }
+
     const detailRef = useRef()
     const closeDetails = e => {
         if (detailRef.current === e.target) {
-            console.log(navigate)
             navigate('/gram')
         }
     }
 
     const onAddNote = (ev) => {
-        // console.log('adding note...', text)
         if (text === '' && text.length < 1) return
         const comment = {
-            by: { id: utilService.makeId(), fullname: (user) ? user.name : 'Guest', imgUrl: (user) ? user.imgUrl : guestUserPhoto },
+            by: { id: utilService.makeId(), fullname: (user) ? user.username : 'Guest', imgUrl: (user) ? user.imgUrl : guestUserPhoto },
             id: utilService.makeId(),
             likedBy: [{}],
             txt: text,
@@ -64,18 +61,23 @@ export const StoryDetails = (props) => {
 
 
     useEffect(() => {
-        console.log(user)
-        storyService.getById((params.id))
-            .then((story) => {
-                setStory(story)
-            })
+        loadStory()
     }, [])
+
+    const loadStory = async () => {
+        const story = await storyService.getById(params.id)
+        setStory(story)
+    }
+
     if (!story) return <div>Loading...</div>
     const { comments } = story
     return (
         <>
 
             <div className="details-background" ref={detailRef} onClick={closeDetails} >
+                {/* <div className="testDiv">
+                    {storys.map(story => <StoryPreview story={story} key={story._id} />)}
+                </div> */}
                 <Link to={'/gram'}>
                     <MdClose className="details-close-button"></MdClose>
                 </Link>

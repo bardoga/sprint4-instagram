@@ -13,7 +13,7 @@ const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
 
 export const AppHeader = () => {
     const { user } = useSelector((storeState) => storeState.userModule)
-    const [showModal, setShowModal] = useState(false)
+    const [showmodal, setShowModal] = useState(null)
     const [openMenu, setopenMenu] = useState(false)
 
 
@@ -21,7 +21,7 @@ export const AppHeader = () => {
         console.log('adding post..')
         setShowModal(prev => !prev)
     }
-  
+
     return (
         <header className="app-header">
             <Link to={'/gram'} style={{ textDecoration: 'none' }}>
@@ -41,11 +41,11 @@ export const AppHeader = () => {
                     <img className="navbar-icons" src={direction} width={24} height={24} alt="" />
                     <img className="navbar-icons" src={heart} width={24} height={24} alt="" />
                     <Avatar onClick={() => setopenMenu(prev => !prev)} style={{ 'maxWidth': '27px', 'maxHeight': '27px', 'marginLeft': '10px', 'cursor': 'pointer' }} src={(user) ? user.imgUrl : guestUserPhoto} />
-                    {openMenu && <UserModal/>}
+                    {openMenu && <UserModal />}
                 </nav>
             </div>
             <div>
-                <NewStoryModal showModal={showModal} setShowModal={setShowModal} />
+                <NewStoryModal showmodal={showmodal} setShowModal={setShowModal} />
             </div>
         </header>
     )

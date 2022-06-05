@@ -3,6 +3,10 @@ import { Formik, Form, useField, ErrorMessage } from "formik";
 import { object, string, ref } from "yup";
 import { Link } from "react-router-dom";
 import { userService } from "../services/user.service";
+import { signup } from "../store/actions/user.action";
+import { useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+
 
 
 export const SignUp = () => {
@@ -12,7 +16,7 @@ export const SignUp = () => {
 }
 
 const RegisterValidation = object().shape({
-    name: string().required("Required"),
+    fullname: string().required("Required"),
     email: string()
         .required("Valid email required")
         .email("Valid email required"),
@@ -26,8 +30,8 @@ const Input = ({ name, label, ...props }) => {
     const [field, meta] = useField(name);
     return (
         <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold" for={field.name}>
-                
+            <label className="block text-gray-700 text-sm font-bold" htmlFor={field.name}>
+
             </label>
             <input
                 className={`${meta.error && meta.touched ? "border-red-500" : ""
@@ -45,9 +49,32 @@ const Input = ({ name, label, ...props }) => {
 };
 
 const App = () => {
-    const handleSubmit = (values) => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const handleSubmit = async (values) => {
         console.log(values);
-        userService.signup(values)
+        const user = {
+            fullname: values.fullname,
+            username: values.username,
+            password: values.password,
+            // email: values.email
+        }
+        // console.log(user)
+        const loggedin = userService.getLoggedinUser()
+        console.log(loggedin)
+        try {
+            dispatch(signup(user))
+            if (loggedin) {
+
+                (navigate('/gram'))
+            }
+
+        }
+        catch (err) {
+            console.log(err)
+
+        }
+
     };
 
     return (
@@ -56,8 +83,8 @@ const App = () => {
             <p>Sign up to see photos and videos from your friends</p>
             <Formik
                 initialValues={{
-                    name: "",
-                    username:'',
+                    fullname: "",
+                    username: '',
                     email: "",
                     password: "",
                     // confirmPassword: "",
@@ -69,7 +96,7 @@ const App = () => {
                     return (
                         <Form className="signup-form bg-white w-6/12 shadow-md rounded px-8 pt-6 pb-8">
                             <Input className='signin-input' name="email" label="Email" placeholder='Email' />
-                            <Input className='signin-input' name="name" label="Name" placeholder='Full Name' />
+                            <Input className='signin-input' name="fullname" label="Fullname" placeholder='Full Name' />
                             <Input className='signin-input' name="username" label="Username" placeholder='Username' />
                             <Input className='signin-input' name="password" label="Password" type="Password" placeholder='Password' />
                             {/* <Input
@@ -90,13 +117,13 @@ const App = () => {
                 }}
             </Formik>
             <div className="login-link-mainapp">
-                    <p style={{fontSize:'0.9em',margin:'5px',color:'#262626;'}}>
-                        Have an account? <Link to={'/'} style={{textDecoration:'none'}}>
-                        <span style={{ color: '#00A2F8'}}>Log in</span>
-                        
-                        </Link>
-                    </p>
-                </div>
+                <p style={{ fontSize: '0.9em', margin: '5px', color: '#262626' }}>
+                    Have an account? <Link to={'/'} style={{ textDecoration: 'none' }}>
+                        <span style={{ color: "#262626" }}>Log in</span>
+
+                    </Link>
+                </p>
+            </div>
         </div>
     );
 }

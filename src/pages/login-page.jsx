@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { userService } from "../services/user.service"
 import welcome from '../assets/svg/welcome.svg'
+import { useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import { login } from "../store/actions/user.action"
 
 
 export const LoginPage = () => {
     const navigate = useNavigate();
-    console.log(navigate)
+    // console.log(navigate)
     return (
         <section className="login-page">
             <div className="login-page-img">
                 {/* <img width={300} height={300} src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1200px-Instagram_logo_2016.svg.png' alt='' /> */}
-                <img width={400} height={500} src={welcome} alt='' />
+                <img width={450} height={600} src={welcome} alt='' />
             </div>
             <div className="login-signup">
                 <LoginForm navigate={navigate} />
@@ -34,69 +36,85 @@ export const loginSchema = Yup.object().shape({
     // email: Yup.string().email("Invalid email").required("Required")
 });
 
-class LoginForm extends React.Component {
-    componentDidMount() {
-        // console.log(this.props.navigate)
-    }
+const LoginForm = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    // componentDidMount() {
+    //     // console.log(this.props.navigate)
+    // }
 
-    handleSubmit = (values, { setSubmitting }) => {
-        setTimeout(() => {
-            // console.log(values)
-            userService.login(values)
+    const handleSubmit = async (values) => {
+        const credentials = {
+            username: values.username,
+            password: values.password
 
+        }
+        console.log('credentials', credentials)
+        // console.log('data', data)
+        debugger
+        const loggedin = userService.getLoggedinUser()
+        if (loggedin) {
+            return
+        }
 
-
-
-
-            setSubmitting(false);
-        }, 400);
-        this.props.navigate('/gram')
-
-
+        try {
+            dispatch(login(credentials))
+            if (loggedin) {
+                navigate('/gram')
+            }
+            // console.log('data is', data)
+            // if (!data) return
+        }
+        catch (err) {
+            throw new Error('Wrong credentials')
+            console.log(err)
+        }
 
     };
 
-    render() {
-        // console.log(props)
-        return (
-            <>
-                <h1>MyGram</h1>
-                <Formik
-                    initialValues={{ emailuser: '', password: '' }}
-                    // validationSchema={loginSchema}
-                    onSubmit={this.handleSubmit}
-                >
-                    {({ isSubmitting }) => {
-                        return (
-                            <Form className="login-form">
-                                <label>
-                                    <Field type="emailuser" name="emailuser" className='loginpage-input' placeholder='username or email' />
-                                    <ErrorMessage name="eemailuser" component="div" />
-                                </label>
-                                <label>
 
-                                    <Field type="password" name="password" placeholder='Password' className='loginpage-input' />
-                                    <ErrorMessage name="password" component="div" />
-                                </label>
-                                <button type="submit" disabled={isSubmitting}>
-                                    Log In
-                                </button>
-                            </Form>
-                        );
-                    }}
-                </Formik>
-                <div className="login-link-mainapp">
-                    <p >
-                        Don't have an account? <Link to={'/signup'} style={{ textDecoration: 'none' }}>
-                            <span style={{ color: '#00A2F8' }}>Sign up </span>
+    // console.log(props)
+    return (
+        <>
+            <h1>MyGram</h1>
+            <Formik
+                initialValues={{ username: '', password: '' }}
+                // validationSchema={loginSchema}
+                onSubmit={handleSubmit}
+            >
+                {/* {({ isSubmitting }) => { */}
+                {() => {
+                    return (
+                        <Form className="login-form">
+                            <label>
+                                <Field type="username" name="username" className='loginpage-input' placeholder='username' />
+                                <ErrorMessage name="username" component="div" />
+                            </label>
+                            <label>
 
-                        </Link>
-                    </p>
-                    <p >
-                        continue as <Link style={{ color: '#00A2F8', textDecoration: 'none' }} to={'/gram'}>Guest</Link>
-                    </p>
-                </div>
-            </>
-        );
-    }
+                                <Field type="password" name="password" placeholder='Password' className='loginpage-input' />
+                                <ErrorMessage name="password" component="div" />
+                            </label>
+                            {/* <button type="submit" disabled={isSubmitting}> */}
+                            <button type="submit">
+                                Log In
+                            </button>
+                        </Form>
+                    );
+                }}
+            </Formik>
+            <div className="login-link-mainapp">
+                <p >
+                    Don't have an account? <Link to={'/signup'} style={{ textDecoration: 'none' }}>
+                        <span style={{ color: '#00A2F8' }}>Sign up </span>
+
+                    </Link>
+                </p>
+                <p >
+                    continue as <Link style={{ color: '#00A2F8', textDecoration: 'none' }} to={'/gram'}>Guest</Link>
+                </p>
+            </div>
+        </>
+    );
+
 }

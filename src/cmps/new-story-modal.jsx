@@ -1,26 +1,25 @@
 import React, { useRef, useEffect, useCallback, useState } from "react"
 import { MdClose } from 'react-icons/md'
-import { uploadService } from "../services/upload.service"
 import { ImgUploader } from "./img-uploader"
 import { Avatar } from "@mui/material"
 import { useSelector, useDispatch } from "react-redux"
-import { storyService } from "../services/story.service"
-import { saveStory, addStory } from "../store/actions/story.action"
-import { utilService } from "../services/utils.service"
+import { loadStorys, saveStory } from "../store/actions/story.action"
 import leftArrow from '../assets/svg/left-arrow.png'
 
 
 
 
-export const NewStoryModal = ({ showModal, setShowModal }) => {
+export const NewStoryModal = ({ showmodal, setShowModal }) => {
     const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
 
+    const dispatch = useDispatch()
     const [text, setText] = useState(null)
     const [color, setColor] = useState('lightblue')
-    const [words,setWords] = useState(0)
+    const [words, setWords] = useState(0)
     const [img, setImg] = useState('')
-    const { user } = useSelector((storeState) => storeState.userModule)
-    const dispatch = useDispatch()
+    const [loggedUser, setLoggedUSer] = useState('')
+    const { story } = useSelector((storeState) => storeState.storyModule)
+    const { users, user } = useSelector((storeState) => storeState.userModule)
 
     const detailRef = useRef()
     const closeDetails = e => {
@@ -30,25 +29,47 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
             setText('')
         }
     }
-
+    useEffect(() => {
+        onFindLoggedUser()
+        if (showmodal) {
+            document.body.style.overflow = 'hidden'
+        }
+        else {
+            document.body.style.overflow = 'scroll'
+        }
+        return () => {
+            dispatch(loadStorys())
+        }
+    }, [showmodal, users, user]);
 
     const handleChange = (ev) => {
         setText(ev.target.value)
     }
+    const onFindLoggedUser = () => {
+        var log = users.find(o => o.username === user.username)
+        console.log('this user is currently logged in', loggedUser)
+        setLoggedUSer(log)
+    }
+
+
+
+    // useEffect(() => {
+
+    // },[])
 
 
     const onAddStory = (ev) => {
         console.log(text, img, user)
         if (text === '' && text.length < 1) return
         const story = {
-            // _id: utilService.makeId(),
+            // _id,
             txt: text,
             imgUrl: img.imgUrl, //Can be an array if decide to support multiple imgs
             createdAt: Date.now(),
             by: {
-                _id: (user) ? user._id : 'guest_id',
-                fullname: (user) ? user.fullname : 'guest',
-                imgUrl: (user) ? user.imgUrl : guestUserPhoto
+                _id: (loggedUser) ? loggedUser._id : 'gggggggggggggggggggggggg',
+                fullname: (loggedUser) ? loggedUser.fullname : 'guest',
+                imgUrl: (loggedUser) ? loggedUser.imgUrl : guestUserPhoto
             },
             loc: {
                 lat: '',
@@ -60,9 +81,9 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
             tags: ['fun']
 
         }
-        dispatch(addStory(story))
+        dispatch(saveStory(story))
+        console.log(story)
         setShowModal(false)
-        // console.log(ans)
     }
 
     const onUploaded = (imgUrl) => {
@@ -71,12 +92,12 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
 
     const keyPress = useCallback(
         e => {
-            if (e.key === 'Escape' && showModal) {
+            if (e.key === 'Escape' && showmodal) {
                 setImg('')
                 setText('')
             }
         },
-        [setShowModal, showModal]
+        [setShowModal, showmodal]
     )
 
 
@@ -88,8 +109,10 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
             setText('')
             return () => document.removeEventListener('keydown', keyPress);
         },
-        [keyPress]
+        [keyPress, story]
     );
+
+
     const checkLoggedUser = () => {
         if (user) return user.imgUrl
         else return
@@ -98,14 +121,14 @@ export const NewStoryModal = ({ showModal, setShowModal }) => {
     return (
         <>
             {/* if (!img) return <div>Loading</div> */}
-            {showModal ? (
+            {showmodal ? (
                 <div className="modal-background" ref={detailRef} onClick={closeDetails}>
                     <MdClose onClick={() => setShowModal(prev => !prev)} className="modal-close-button"></MdClose>
-                    <div className="modal-wrapper" showModal={showModal}>
+                    <div className="modal-wrapper" showmodal={showmodal}>
                         <div className="modal-inner">
                             <div className="modal-content">
                                 <div className="modal-contant-header">
-                                    {img && <button onClick={() => setImg('')} className="previous-modal-content"> <img src={leftArrow} width={15} height={15} alt=""/></button>}
+                                    {img && <button onClick={() => setImg('')} className="previous-modal-content"> <img src={leftArrow} width={15} height={15} alt="" /></button>}
                                     <h1>Create new post</h1>
                                     {img && <button onClick={onAddStory} className="share-button">Share</button>}
                                 </div>

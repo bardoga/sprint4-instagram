@@ -1,38 +1,32 @@
-import React, { useEffect,useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
-import { storyService } from '../services/story.service'
-import { loadStorys, removeStory, addStory, updateStory } from '../store/actions/story.action.js'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+// import { storyService } from '../services/story.service'
+import { loadStorys } from '../store/actions/story.action.js'
 import { StoryPreview } from '../cmps/story-preview'
+import { loadUsers } from '../store/actions/user.action.js'
+import { userService } from '../services/user.service.js'
 
 
 
 
-// function _InstaApp({ loadStorys, addStory, updateStory, removeStory, storys }) {
-export const InstaApp = (props) => {
+export const InstaApp = () => {
 
     const { storys } = useSelector((storeState) => storeState.storyModule)
-    const { user } = useSelector((storeState) => storeState.userModule)
     const dispatch = useDispatch()
 
     useEffect(() => {
         document.body.scrollTop = 0;
-    },[])
-    useEffect(() => {
-        document.body.scrollTop = 0;
-    })
-
-
-    useEffect(() => {
         dispatch(loadStorys())
+        dispatch(loadUsers())
     }, [])
 
-    // console.log('your storys are:', storys)
-    // console.log('logged in user is:', user)
+
+    if (!storys) return <div>Loading...</div>
     return (
         <section className="insta-app">
             <div className="storys-wrapper">
                 <div className="story-username">
-                    {storys.map(story => <StoryPreview story={story} key={story._id}/>)}
+                    {storys.map(story => <StoryPreview story={story} key={story._id} />)}
                 </div>
 
             </div>

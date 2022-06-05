@@ -12,6 +12,16 @@
     z-index: 10;
 }
 
+.testDiv {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    opacity: 0.4;
+}
+
 // 608 450 
 .details-wrapper {
     width: 70vw;
@@ -23,6 +33,7 @@
     background: #fff;
     color: #000;
     border-radius: 0 4px 4px 0;
+    z-index: 100;
 }
 
 .details-inner {

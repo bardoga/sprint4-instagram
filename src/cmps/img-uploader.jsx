@@ -8,7 +8,7 @@ export class ImgUploader extends Component {
     // width: 500,
     isUploading: false
   }
-  uploadImg = async (ev) => {
+  OnUploadImg = async (ev) => {
     this.setState({ isUploading: true })
     const { secure_url, height, width } = await uploadService.uploadImg(ev)
     this.setState({ isUploading: false, imgUrl: secure_url, height, width })
@@ -20,15 +20,15 @@ export class ImgUploader extends Component {
     return isUploading ? 'Uploading....' : 'Upload Image'
   }
   render() {
-    const { imgUrl} = this.state
+    const { imgUrl } = this.state
 
     return (
       <div className="upload-preview" >
-        {imgUrl && <img src={imgUrl} style={{maxWidth: '200px', float: 'right'}} />}
+        {imgUrl && <img src={imgUrl} style={{ maxWidth: '200px', float: 'right' }} />}
         {/* <label htmlFor="imgUpload">{ this.uploadMsg }</label> */}
-        <button> 
-        <input className='upload-sbm' type="file" onChange={ this.uploadImg } accept="img/*" id="imgUpload" placeholder='' />
-            
+        <button>
+          <input className='upload-sbm' type="file" onChange={this.OnUploadImg} accept="img/*" id="imgUpload" placeholder='' />
+
         </button>
       </div>
     )

@@ -4,11 +4,22 @@
     justify-content: center;
     flex-direction: row;
     flex-grow: 1;
-    margin: 32px auto 0;
+    align-items: center;
     padding-bottom: 32px;
-    margin-top: 150px;
-    max-width: 935px;
-    gap: 2em;
+    margin-top: 110px;
+    // max-width: 935px;
+    // height: 530px;
+    @media screen and (max-width: 950px) {
+        display: flex;
+        flex-direction: column-reverse;
+        margin-top: 30px;
+    }
+}
+
+.login-page-img {
+    @media screen and (max-width: 950px) {
+        display: none;
+    }
 }
 
 .login-signup {
@@ -22,6 +33,7 @@
     flex-direction: column;
     border: 1px solid lightgray;
     background-color: #FFFFFF;
+    margin-top:70px
 }
 
 .login-form {

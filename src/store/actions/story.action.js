@@ -1,4 +1,5 @@
 import { storyService } from "../../services/story.service"
+import { showSuccessMsg, showErrorMsg } from '../../services/event-bus.service'
 
 export function getActionRemoveStory(storyId) {
     return {
@@ -19,28 +20,32 @@ export function getActionUpdateStory(story) {
     }
 }
 
-// var subscriber
+var subscriber
 
 
-export function loadStorys() {
-    return dispatch => {
-        return storyService.query()
-            .then(storys => {
-                const action = {
-                    type: 'SET_STORYS',
-                    storys
-                }
-                dispatch(action)
-            })
-            .catch(err => {
-                console.error('ERROR:', err)
-            })
+export function loadStorys() { // Action Creator
+    return async(dispatch) => {
+        try {
+            // const filterBy = getState().storyModule
+            const storys = await storyService.query()
+            showSuccessMsg('loaded storys')
+            dispatch({ type: 'SET_STORYS', storys })
+        } catch (err) {
+            console.error('Error:', err)
+            showErrorMsg('Cannot load storys')
+        }
+        if (subscriber) storyService.unsubscribe(subscriber)
+        subscriber = (ev) => {
+            console.log('Got notified', ev.data)
+            dispatch(ev.data)
+        }
+        storyService.subscribe(subscriber)
     }
 }
 
+
 export function addStory(story) {
     return (dispatch) => {
-
         storyService.save(story)
             .then(savedStory => {
                 console.log('Added Story', savedStory);
@@ -52,24 +57,6 @@ export function addStory(story) {
     }
 }
 
-// export function loadStorys() { // Action Creator
-//     return async(dispatch, getState) => {
-//         try {
-//             const filterBy = getState().storyModule.filterBy
-//             const storys = await storyService.query(filterBy)
-//             dispatch({ type: 'SET_STORYS', storys })
-//         } catch (err) {
-//             console.error('Error:', err)
-//                 // showErrorMsg('Cannot load storys')
-//         }
-//         if (subscriber) storyService.unsubscribe(subscriber)
-//         subscriber = (ev) => {
-//             console.log('Got notified', ev.data)
-//             dispatch(ev.data)
-//         }
-//         storyService.subscribe(subscriber)
-//     }
-// }
 
 export function removeStory(storyId) {
     return (dispatch, getTheState) => {
@@ -89,21 +76,21 @@ export function removeStory(storyId) {
 }
 
 
-export function saveStory(story) {
-    return dispatch => {
-        const actionType = (story._id) ? 'UPDATE_STORY' : 'ADD_STORY'
-        storyService.save(story)
-            .then(savedStory => {
-                dispatch({
-                        type: actionType,
-                        story: savedStory
-                    })
-                    .catch(err => {
-                        console.error('ERROR:', err)
-                    })
-            })
-    }
-}
+// export function saveStory(story) {
+//     return dispatch => {
+//         const actionType = (story._id) ? 'UPDATE_STORY' : 'ADD_STORY'
+//         storyService.save(story)
+//             .then(savedStory => {
+//                 dispatch({
+//                         type: actionType,
+//                         story: savedStory
+//                     })
+//                     .catch(err => {
+//                         console.error('ERROR:', err)
+//                     })
+//             })
+//     }
+// }
 
 export function setFilter(filterBy) {
     return (dispatch) => {
@@ -112,5 +99,19 @@ export function setFilter(filterBy) {
             filterBy
         })
 
+    }
+}
+
+
+export function saveStory(story) {
+    return async dispatch => {
+        try {
+            const savedStory = await storyService.save(story)
+                (story._id) ? dispatch(getActionUpdateStory(story._id)) : dispatch(getActionAddStory(story._id))
+            showSuccessMsg('story saved')
+        } catch (err) {
+            console.log('Error', err)
+            showErrorMsg('couldnt save story')
+        }
     }
 }
