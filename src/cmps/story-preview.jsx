@@ -3,16 +3,18 @@ import { utilService } from "../services/utils.service"
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux"
 import { loadStorys, saveStory } from '../store/actions/story.action'
+import { getActionUpdateStory } from '../store/actions/story.action'
 import { loadUsers } from '../store/actions/user.action'
 import { userService } from '../services/user.service'
+import { EditPostModal } from './edit-story-modal.jsx'
 
 
 import { Avatar } from "@mui/material"
 import heart from '../assets/svg/heart2.png'
+import heartFilled from '../assets/svg/heartFilled.png'
 import send from '../assets/svg/send.png'
 import chat from '../assets/svg/chat-bubble.png'
-// import save from '../assets/svg/save.svg'
-// import saved from '../assets/svg/save-dark.svg'
+import edit from '../assets/svg/edit.svg'
 import saveEmpty from '../assets/svg/ribbon-hollow.png'
 import saveFilled from '../assets/svg/ribbon-filled.png'
 
@@ -31,39 +33,70 @@ export function StoryPreview({ story }) {
     const [color, setColor] = useState('lightblue')
     const [save, setSave] = useState(saveEmpty)
     const [saved, setSaved] = useState(saveFilled)
+    const [showedit, setShowEditModal] = useState(false)
     const [loggedUser, setLoggedUSer] = useState((userService.getLoggedinUser()) ? userService.getLoggedinUser() : 'guest')
     const guestUserPhoto = 'http://cdn.onlinewebfonts.com/svg/img_258083.png'
 
 
     useEffect(() => {
-        // console.log(loggedUser)
+        // dispatch(loadStorys())
         document.body.style.overflow = 'scroll'
+        // console.log(loggedUser)
+    }, [story, users])
+
+    useEffect(() => {
+        console.log('storys and users updated')
+        dispatch(loadStorys())
+        dispatch(loadUsers())
     }, [])
 
+
     const onSavePost = () => {
-        if (!loggedUser) return
+        if (!loggedUser) {
+            return
+        }
         const { savedStoryIds } = loggedUser
-        if (save === saveEmpty) {
-            console.log(story._id)
-            setSave(saveFilled)
+        if (savedStoryIds.includes(story._id)) {
+            console.log(savedStoryIds)
+            const idx = savedStoryIds.findIndex(savedStoryId => savedStoryId === story._id)
+            console.log(idx)
+            savedStoryIds.splice(idx, 1)
+            console.log(loggedUser)
+            userService.update(loggedUser)
+            dispatch(loadStorys())
+        }
+        else {
             savedStoryIds.push(story._id)
             userService.update(loggedUser)
-        } else {
-            setSave(saveEmpty)
-            savedStoryIds.filter(function (e) { return e !== story._id })
-            userService.update(loggedUser)
+            dispatch(loadStorys())
         }
     }
 
-    // const checkSaved = async () => {
-    //     const loggeduser = await userService.getLoggedinUser()
-    //     const { savedStoryIds } = loggeduser
-    //     console.log(loggeduser)
-    //     debugger
-    //     const a = (savedStoryIds.includes(story._id)) ? saveFilled : saveEmpty
-    //     return a
+    const onLikePost = () => {
+        if (!loggedUser) {
+            return
+        }
+        const { likedBy } = story
+        // debugger
+        console.log('liked by', likedBy)
+        let obj = likedBy.findIndex(x => x._id === user._id)
+        console.log(obj)
+        if (obj !== -1) {
 
-    // }
+            likedBy.splice(obj, 1)
+            dispatch(saveStory(story))
+        }
+
+        else {
+            let liked = {
+                _id: user._id,
+                fullname: user.fullname,
+                imgUrl: user.imgUrl
+            }
+            likedBy.push(liked)
+            dispatch(saveStory(story))
+        }
+    }
 
 
     const onAddComment = (ev) => {
@@ -80,9 +113,6 @@ export function StoryPreview({ story }) {
         setColor('lightblue')
     }
 
-
-
-
     const handleChange = (ev) => {
         setText(ev.target.value)
         setColor('#0095F7')
@@ -91,20 +121,30 @@ export function StoryPreview({ story }) {
 
 
     const { savedStoryIds } = loggedUser
-    // console.log(loggedUser)
+    const { likedBy } = story
     if (!story) return <div>Loaidng...</div>
     return <section className="story-wrapper" >
+        <div>
+            <EditPostModal showedit={showedit} setShowEditModal={setShowEditModal} story={story} />
+        </div>
         <div className="story-wrapper-inner">
             <div className="post-username">
-                <div className="story-avatar" style={{ height: '42px', width: '42px' }}>
-                    <Avatar style={{ 'maxWidth': '32px', 'maxHeight': '32px', 'margin': '5px', 'position': 'static' }}
-                        className="story-avatar"
-                        // src={story.by.imgUrl}></Avatar>
-                        src={guestUserPhoto}></Avatar>
+                <div className='preview-header-leftside'>
+
+                    <div className="story-avatar" style={{ height: '42px', width: '42px' }}>
+                        <Avatar style={{ 'maxWidth': '32px', 'maxHeight': '32px', 'margin': '5px', 'position': 'static' }}
+                            className="story-avatar"
+                            // src={story.by.imgUrl}></Avatar>
+                            src={guestUserPhoto}></Avatar>
+
+                    </div>
+                    <div className="story-header-username">
+                        <p>{story.by.fullname}</p>
+                        <p className='unbold-me'>{story.loc.name}</p>
+                    </div>
                 </div>
-                <div className="story-header-username">
-                    <p>{story.by.fullname}</p>
-                    <p className='unbold-me'>{story.loc.name}</p>
+                <div className="div-header-edit">
+                    <img onClick={() => setShowEditModal(prev => !prev)} src={edit} alt="" width={24} height={24} />
                 </div>
             </div>
             <div className="post-img">
@@ -112,7 +152,7 @@ export function StoryPreview({ story }) {
             </div>
             <div className="more-section-parent">
                 <div className="more-section">
-                    <span className='cursor-helper more-section-hovereffect'> <img src={heart} width={24} height={24} alt="" /></span>  {/* onclick should increase like count (check on other browsers)  */}
+                    <span onClick={onLikePost} className='cursor-helper more-section-hovereffect'> <img src={((likedBy.find(o => o._id === user._id)) ? heartFilled : heart)} width={24} height={24} alt="" /></span>  {/* onclick should increase like count (check on other browsers)  */}
                     <Link to={`/gram/${story._id}`} style={{ textDecoration: 'none' }}>
 
                         <span className='cursor-helper more-section-hovereffect' ><img src={chat} width={24} height={24} alt="" /></span>   {/* on lick should open the details component with comments on the left/chatbox component     */}
@@ -120,7 +160,7 @@ export function StoryPreview({ story }) {
                     <span className='cursor-helper more-section-hovereffect'> <img src={send} width={24} height={24} alt="" /></span>  {/* atm it won't do anything, will implement posts by location later if have time */}
                 </div>
                 <div className="more-section-save more-section-hovereffect">
-                    <span onClick={() => onSavePost()}> <img src={(savedStoryIds.includes(story._id) ? saveFilled : saveEmpty)} alt="" width={22} height={22} /></span>
+                    <span onClick={onSavePost}> <img src={((savedStoryIds.includes(story._id)) ? saveFilled : saveEmpty)} alt="" width={22} height={22} /></span>
                 </div>
 
             </div>
@@ -145,6 +185,9 @@ export function StoryPreview({ story }) {
                 <textarea onChange={(e) => handleChange(e)} name='txt' value={text} placeholder='Add a comment...' aria-label='Add a comment...' autoComplete='off' autoCorrect='off' id="text" rows='2' style={{ height: '18px' }} ></textarea>
                 <button style={{ color: (text) ? '#0095F7' : 'lightblue' }} onClick={onAddComment} className='post-comment'>Post</button>
             </div>
+            {/* <div>
+                <EditPostModal showedit={showedit} setShowEditModal={setShowEditModal} story={story} />
+            </div> */}
         </div>
     </section >
 }

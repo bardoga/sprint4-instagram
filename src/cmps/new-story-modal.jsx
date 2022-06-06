@@ -5,6 +5,7 @@ import { Avatar } from "@mui/material"
 import { useSelector, useDispatch } from "react-redux"
 import { loadStorys, saveStory } from "../store/actions/story.action"
 import leftArrow from '../assets/svg/left-arrow.png'
+import { userService } from "../services/user.service"
 
 
 
@@ -17,7 +18,7 @@ export const NewStoryModal = ({ showmodal, setShowModal }) => {
     const [color, setColor] = useState('lightblue')
     const [words, setWords] = useState(0)
     const [img, setImg] = useState('')
-    const [loggedUser, setLoggedUSer] = useState('')
+    const [loggedUser, setLoggedUSer] = useState((userService.getLoggedinUser()) ? userService.getLoggedinUser() : 'guest')
     const { story } = useSelector((storeState) => storeState.storyModule)
     const { users, user } = useSelector((storeState) => storeState.userModule)
 
@@ -30,7 +31,7 @@ export const NewStoryModal = ({ showmodal, setShowModal }) => {
         }
     }
     useEffect(() => {
-        onFindLoggedUser()
+        // onFindLoggedUser()
         if (showmodal) {
             document.body.style.overflow = 'hidden'
         }
@@ -45,11 +46,11 @@ export const NewStoryModal = ({ showmodal, setShowModal }) => {
     const handleChange = (ev) => {
         setText(ev.target.value)
     }
-    const onFindLoggedUser = () => {
-        var log = users.find(o => o.username === user.username)
-        console.log('this user is currently logged in', loggedUser)
-        setLoggedUSer(log)
-    }
+    // const onFindLoggedUser = () => {
+    //     var log = users.find(o => o.username === user.username)
+    //     console.log('this user is currently logged in', loggedUser)
+    //     setLoggedUSer(log)
+    // }
 
 
 

@@ -11,6 +11,7 @@ import { SignUp } from './cmps/signup';
 
 import { StoryDetails } from './cmps/story-details.jsx'
 import { LoginPage } from './pages/login-page';
+import { UserProfile } from './pages/user-profile.jsx'
 
 
 export function RootCmp() {
@@ -18,13 +19,14 @@ export function RootCmp() {
   // console.log(location)
   return (
     <div>
-      {(location.pathname === '/gram') && <AppHeader />}
+      {(location.pathname !== '/signup' && location.pathname !== '/') && <AppHeader />}
       {/* {if (routes.path === '/gram') return <AppHeader />} */}
-      {/* <AppHeader/> */}
+      {/* <AppHeader /> */}
       <main>
         <Routes>
           {routes.map(route => <Route key={route.path} exact={true} element={route.component} path={route.path} />)}
           <Route path='/' element={<LoginPage />}></Route>
+          <Route path='/:id' element={<UserProfile />}></Route>
           <Route path='/signup' element={<SignUp />}></Route>
           <Route path='/gram/:id' element={<StoryDetails />}></Route>
         </Routes>

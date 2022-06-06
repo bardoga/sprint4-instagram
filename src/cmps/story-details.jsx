@@ -62,7 +62,16 @@ export const StoryDetails = (props) => {
 
     useEffect(() => {
         loadStory()
+        // dispatch(loadStorys())
+        return () => {
+
+        }
     }, [])
+
+    // useEffect(() => {
+    //     // dispatch(loadStorys())
+    //     // loadStory()
+    // })
 
     const loadStory = async () => {
         const story = await storyService.getById(params.id)

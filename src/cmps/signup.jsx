@@ -64,17 +64,11 @@ const App = () => {
         console.log(loggedin)
         try {
             dispatch(signup(user))
-            if (loggedin) {
-
                 (navigate('/gram'))
-            }
-
         }
         catch (err) {
             console.log(err)
-
         }
-
     };
 
     return (
